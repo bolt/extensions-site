@@ -20,6 +20,7 @@ class PackagistExtension extends BaseExtension
     private const PACKAGIST_DETAIL = 'https://packagist.org/packages/';
     private const TYPE_EXTENSION = 'bolt-extension';
     private const TYPE_THEME = 'bolt-theme';
+    private const MAX_COUNT = 100;
 
     /** @var ContentRepository */
     private $contentRepository;
@@ -84,19 +85,17 @@ class PackagistExtension extends BaseExtension
     public function updatePackages()
     {
         $om = $this->getObjectManager();
-
-
         $client = HttpClient::create();
+        $count = 0;
 
-        $params = ['order' => 'modifiedAt', 'status' => '!unknown', 'packagist_type' => 'bolt-theme'];
+//        , 'packagist_type' => 'bolt-theme'];
+        $params = ['order' => 'modifiedAt', 'status' => '!unknown'];
 
         $records = $this->getQuery()->getContentForTwig('packages', $params);
 
-        $count = 0;
-
         /** @var Content $record */
         foreach ($records as $record) {
-            if ($count++ >= 3) {
+            if ($count++ >= self::MAX_COUNT) {
                 break;
             }
 
@@ -154,9 +153,10 @@ class PackagistExtension extends BaseExtension
 
         $record->setStatus(Statuses::PUBLISHED);
 
-        if ($packagistName == 'bolt/themes') {
-            dump($latest_version);
-        }
+//        if ($packagistName == 'bolt/themes') {
+//            unset($package['versions']);
+//            dump($package);
+//        }
 
         // @todo This is hackish. Make better.
         if (in_array($packagistName, [

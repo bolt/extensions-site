@@ -1,0 +1,70 @@
+{% extends 'partials/_master.twig' %}
+
+{% block main %}
+
+<section class="section section-record">
+    <div class="container">
+        {% if record|image  %}
+        <figure class="image is-2by1">
+            <img src="{{ record|image|thumbnail(1080, 540, fit='crop') }}" alt="{{ record|image.alt|default() }}" />
+            <figcaption>
+                {{ record|image.alt|default() }}
+            </figcaption>
+        </figure>
+        {% endif %}
+
+        <div class="columns is-centered">
+            <div class="column is-two-thirds">
+                <article role="article" class="content">
+                    <h1 class="title is-size-1 is-size-3-mobile">{{ record|title }}</h1>
+
+                    <p><strong>{{ record.description }}</strong></p>
+
+                    <p>Installation instructions:</p>
+
+                    <pre class="language-bash">
+composer require {{ record.packagist_name }}
+bin/console bolt:copy-theme {{ record.packagist_name }}</pre>
+
+                    {% if record.screenshots %}
+                        <div>
+                        {% for screenshot in record.screenshots %}
+                            <img src="https://raw.githubusercontent.com/bolt/themes/master/{{ screenshot }}" style="width: 300px; border:1px solid #CCC; margin-right: 1rem;">
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <ul>
+                        <li><strong>Repository: </strong> <a href="{{ record.repository }}">{{ record.repository }}</a></li>
+                        <li><strong>Popularity: </strong> {{ record.github_stars }} stars on Github.</li>
+                        <li><strong>Downloads: </strong> {{ record.downloads_total }} total,
+                            {{ record.downloads_monthly }} monthly,
+                            {{ record.downloads_daily }} daily, </li>
+
+                        <li><strong>Maintainers:</strong>
+                            {% if attribute(record.maintainers, 'name') %}
+                                {% set maintainers = [record.maintainers] %}
+                            {% else %}
+                                {% set maintainers = record.maintainers %}
+                            {% endif %}
+                            {% for maintainer in maintainers %}
+                                {{ maintainer.name }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </li>
+
+                        <li><strong>Versions:</strong>
+                            {% for version in record.versions %}
+                                <span class="tag is-light">{{ version }}</span>
+                            {% endfor %}
+                        </li>
+                    </ul>
+
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include "partials/_sub_recent_records.twig" %}
+
+{% endblock main %}
