@@ -4,6 +4,7 @@
 namespace App;
 
 use Bolt\Common\Json;
+use Bolt\Common\Str;
 use Bolt\Configuration\Content\ContentType;
 use Bolt\Entity\Content;
 use Bolt\Enum\Statuses;
@@ -33,9 +34,15 @@ class PackagistExtension extends BaseExtension
 
     }
 
-    public function fetchPackages()
+    public function fetchPackages(string $type): void
     {
-        $url = sprintf('%s?type=%s', self::PACKAGIST_LIST, self::TYPE_EXTENSION);
+        if ($type == 'extension') {
+            $type = self::TYPE_EXTENSION;
+        } else {
+            $type = self::TYPE_THEME;
+        }
+
+        $url = sprintf('%s?type=%s', self::PACKAGIST_LIST, $type);
         $client = HttpClient::create();
         $response = $client->request('GET', $url);
 
@@ -68,6 +75,7 @@ class PackagistExtension extends BaseExtension
         $content->setFieldValue('title', $package);
         $content->setFieldValue('slug', $package);
         $content->setFieldValue('packagist_type', $type);
+        $content->setModifiedAt(new \DateTime('last year'));
 
         $om->persist($content);
         $om->flush();
@@ -80,7 +88,7 @@ class PackagistExtension extends BaseExtension
 
         $client = HttpClient::create();
 
-        $params = ['order' => 'modifiedAt', 'status' => '!unknown'];
+        $params = ['order' => 'modifiedAt', 'status' => '!unknown', 'packagist_type' => 'bolt-theme'];
 
         $records = $this->getQuery()->getContentForTwig('packages', $params);
 
@@ -88,78 +96,103 @@ class PackagistExtension extends BaseExtension
 
         /** @var Content $record */
         foreach ($records as $record) {
-            if ($count++ >= 100) {
+            if ($count++ >= 3) {
                 break;
             }
 
-            $packagist_name = (string) $record->getFieldValue('packagist_name');
-            dump($packagist_name);
+            $packagistName = (string) $record->getFieldValue('packagist_name');
+            dump($packagistName);
 
-            $url = sprintf('%s%s.json', self::PACKAGIST_DETAIL, $packagist_name);
+            $url = sprintf('%s%s.json', self::PACKAGIST_DETAIL, $packagistName);
 
             $response = $client->request('GET', $url);
-            $response_array = current($response->toArray());
+            $responseArray = current($response->toArray());
 
-            $package = new Collection($response_array);
-
-            if ($response_array) {
-                $record->setFieldValue('description', $package->get('description'));
-                $record->setFieldValue('time', $package->get('time'));
-                $record->setFieldValue('maintainers', $package->get('maintainers'));
-                $record->setFieldValue('packagist_type', $package->get('type'));
-                $record->setFieldValue('repository', $package->get('repository'));
-                $record->setFieldValue('github_stars', $package->get('github_stars'));
-                $record->setFieldValue('downloads_total', $package->get('downloads')['total']);
-                $record->setFieldValue('downloads_monthly', $package->get('downloads')['monthly']);
-                $record->setFieldValue('downloads_daily', $package->get('downloads')['daily']);
-                $record->setFieldValue('favers', $package->get('favers'));
-
-                $record->setModifiedAt(new \DateTime());
-
-                $om->persist($record);
-
-                $versions = (new Collection($package->get('versions')))->keys()->sort(function ($version, $key) {
-                    return strpos($version, 'ev-');
-                })->all();
-
-                $record->setFieldValue('versions', $versions);
-
-                $latest_version = (new Collection($package->get('versions')))->get(current($versions));
-
-                if (isset($latest_version['require']['bolt/core'])) {
-                    $record->setFieldValue('required_version', $latest_version['require']['bolt/core']);
-                } else {
-                    $record->setFieldValue('required_version', 3);
-                }
-
-                $record->setStatus(Statuses::PUBLISHED);
-
-                // @todo This is hackish. Make better.
-                if (in_array($packagist_name, [
-
-                    "bolt/bolt-extension-starter",
-                    "bolt/bolt-extension-starter-extended",
-                    "rixbeck/bolt-extension-skeleton",
-                    "wemakecustom/bolt-parent-theme",
-                    "bolt/htmlsection",
-                    "eamador/bolt-dialog-pages",
-                    "ggioffreda/bolt-extension-rollbar",
-                    "gigabit/twig-wrap",
-                    "goodbytes/readtime",
-                    "mattvick/bolt-diy-forms",
-                    "ornito/rest-create-users",
-                    "zillingen/json-content",
-                    "zillingen/json-files",
-                ])) {
-                    $record->setStatus(Statuses::DRAFT);
-                }
-
-            }
+            $this->updateRecord($record, $responseArray, $packagistName);
 
             $om->persist($record);
         }
 
         $om->flush();
+    }
 
+    private function updateRecord(Content $record, array $responseArray, string $packagistName): void
+    {
+        $package = new Collection($responseArray);
+
+        $record->setFieldValue('description', $package->get('description'));
+        $record->setFieldValue('time', $package->get('time'));
+        $record->setFieldValue('maintainers', $package->get('maintainers'));
+        $record->setFieldValue('packagist_type', $package->get('type'));
+        $record->setFieldValue('repository', $package->get('repository'));
+        $record->setFieldValue('github_stars', $package->get('github_stars'));
+        $record->setFieldValue('downloads_total', $package->get('downloads')['total']);
+        $record->setFieldValue('downloads_monthly', $package->get('downloads')['monthly']);
+        $record->setFieldValue('downloads_daily', $package->get('downloads')['daily']);
+        $record->setFieldValue('favers', $package->get('favers'));
+
+        $record->setModifiedAt(new \DateTime());
+
+        $versions = $this->sortVersions($package);
+
+        $record->setFieldValue('versions', $versions);
+
+        $latest_version = (new Collection($package->get('versions')))->get(current($versions));
+
+        if (isset($latest_version['require']['bolt/core'])) {
+            $record->setFieldValue('required_version', $latest_version['require']['bolt/core']);
+            $record->setFieldValue('require', $latest_version['require']);
+        } else {
+            $record->setFieldValue('required_version', 3);
+        }
+
+        if (isset($latest_version['extra']['screenshots'])) {
+            $record->setFieldValue('screenshots', $latest_version['extra']['screenshots']);
+        } else {
+            $record->setFieldValue('screenshots', []);
+        }
+
+        $record->setStatus(Statuses::PUBLISHED);
+
+        if ($packagistName == 'bolt/themes') {
+            dump($latest_version);
+        }
+
+        // @todo This is hackish. Make better.
+        if (in_array($packagistName, [
+            "bolt/bolt-extension-starter",
+            "bolt/bolt-extension-starter-extended",
+            "rixbeck/bolt-extension-skeleton",
+            "wemakecustom/bolt-parent-theme",
+            "bolt/htmlsection",
+            "eamador/bolt-dialog-pages",
+            "ggioffreda/bolt-extension-rollbar",
+            "gigabit/twig-wrap",
+            "goodbytes/readtime",
+            "mattvick/bolt-diy-forms",
+            "ornito/rest-create-users",
+            "zillingen/json-content",
+            "zillingen/json-files",
+        ])) {
+            $record->setStatus(Statuses::DRAFT);
+        }
+    }
+
+    private function sortVersions(Collection $package): array
+    {
+        $rawVersions = (new Collection($package->get('versions')))->keys()->all();
+        $versions = [];
+
+        foreach ($rawVersions as $version) {
+            $key = $version;
+            if (Str::startsWith($key, 'v')) {
+                $key = Str::removeFirst($key, 'v');
+            }
+            $versions[$key] = $version;
+        }
+
+        uksort($versions, 'version_compare');
+
+        return array_reverse($versions);
     }
 }

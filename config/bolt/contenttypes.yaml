@@ -72,8 +72,6 @@ packages:
             type: textarea
         time:
             type: datetime
-        maintainers:
-            type: data
         repository:
             type: text
         github_stars:
@@ -86,13 +84,17 @@ packages:
             type: integer
         favers:
             type: integer
-        versions:
-            type: data
         required_version:
             type: text
-        data:
+        maintainers:
             type: data
             group: data
+        require:
+            type: data
+        screenshots:
+            type: data
+        versions:
+            type: data
     records_per_page: 50
 
 
