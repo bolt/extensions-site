@@ -2,9 +2,9 @@
 <nav class="navbar is-fixed-top is-primary" role="navigation" aria-label="main navigation">
     <div class="container">
         <div class="navbar-brand">
-            <span class="navbar-item">
-                {{ config.get('general/sitename') }}
-            </span>
+{#            <span class="navbar-item">#}
+{#                {{ config.get('general/sitename') }}#}
+{#            </span>#}
             <span class="navbar-burger" data-target="navbar-toggle">
                 <span></span>
                 <span></span>
@@ -16,9 +16,9 @@
                 {{ menu(template = 'partials/_sub_menu.twig') }}
             </div>
             <div class="navbar-end">
-                <div class="select ">
-                    {% include 'helpers/_languageselect.html.twig' with {'type': 'select', 'style': 'width: 13rem;'} %}
-                </div>
+{#                <div class="select ">#}
+{#                    {% include 'helpers/_languageselect.html.twig' with {'type': 'select', 'style': 'width: 13rem;'} %}#}
+{#                </div>#}
                 &nbsp;
 
                 <form class="field has-addons" method="get" action="{{ path('search') }}" enctype="text/plain">

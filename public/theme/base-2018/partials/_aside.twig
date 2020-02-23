@@ -11,13 +11,15 @@
     <div class="content">
         {# The next section attempts to fill the panel in the sidebar with the contents of the
             'about-us'-block, if it exists. First, attempt to fetch the block with slug 'about-us' #}
-        {% setcontent block = "blocks/about" %}
+        {% setcontent block = "pages/about" %}
 
         {# check if we have a title. If so, we know we have content to display. Otherwise, we will
             output a default text, telling the user to create the 'blocks' in the backend. #}
         {% if block %}
 
-            <img src="{{ block|thumbnail(480, 320) }}" alt="block|image.alt">
+            {% if block|image %}
+                <img src="{{ block|thumbnail(480, 320) }}" alt="{{ block|image.alt }}">
+            {% endif %}
 
             <h2 class="title">{{ block|title }}</h2>
             <p>{{ block.content|default(block|excerpt) }}</p>

@@ -72,6 +72,8 @@ packages:
             type: textarea
         time:
             type: datetime
+        time_updated:
+            type: datetime
         repository:
             type: text
         github_stars:

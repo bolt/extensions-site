@@ -151,11 +151,13 @@ class PackagistExtension extends BaseExtension
             $record->setFieldValue('screenshots', []);
         }
 
+        $record->setFieldValue('time_updated', $latest_version['time']);
         $record->setStatus(Statuses::PUBLISHED);
 
 //        if ($packagistName == 'bolt/themes') {
 //            unset($package['versions']);
 //            dump($package);
+//            dump($latest_version);
 //        }
 
         // @todo This is hackish. Make better.

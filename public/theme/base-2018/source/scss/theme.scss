@@ -139,8 +139,8 @@ p.meta {
 }
 
 .hero.is-large .hero-body {
-    padding-bottom: 4rem;
-    padding-top: 4rem;
+    padding-bottom: 3rem;
+    padding-top: 3rem;
     h1.title,
     h2.subtitle {
         text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.4);
@@ -153,8 +153,8 @@ p.meta {
         font-size: $subtitle-size;
     }
     @include tablet {
-        padding-bottom: 12rem;
-        padding-top: 12rem;
+        padding-bottom: 4rem;
+        padding-top: 4rem;
         h1.title  {
             font-size: $title-size * 1.25;
         }
@@ -163,8 +163,8 @@ p.meta {
         }
     }
     @include desktop {
-        padding-bottom: 16rem;
-        padding-top: 16rem;
+        padding-bottom: 6rem;
+        padding-top: 6rem;
         h1.title  {
             font-size: $title-size * 1.5;
         }

@@ -21,35 +21,9 @@
     {% endif %}
 
     {% for record in records %}
-        <article role="article" class="media columns">
-            <div class="media-content column is-7">
-                <div class="content">
-                    <h2 class="title"><a href="{{ record|link }}">{{ record|title }}</a></h2>
 
-                    {# display something introduction-like.. #}
-                    {% if record.introduction %}
-                        {{ record.introduction }}
-                    {% elseif record.teaser %}
-                        {{ record.teaser }}
-                    {% else %}
-                        <p>{{ record.excerpt(300, false, search|default('')) }}</p>
-                    {% endif %}
+        {% include('partials/_sub_listing_package.twig') %}
 
-                    {% include 'partials/_record_meta.twig' with {'extended': true} %}
-
-                </div>
-            </div>
-            {% if record|image %}
-                <div class="media-right column">
-                    <figure class="image">
-                        <a href="{{ record|image }}">
-                            <img src="{{ thumbnail(record, 400, 260) }}" alt="{{ (record|image).alt|default(record|title) }}">
-                        </a>
-                    </figure>
-                </div>
-            {% endif %}
-
-        </article>
     {% else %}
         <article role="article">
             <div class="content">

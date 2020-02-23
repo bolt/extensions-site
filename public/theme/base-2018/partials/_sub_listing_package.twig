@@ -1,0 +1,31 @@
+
+<article role="article" class="media columns">
+    <div class="media-content column is-7">
+        <div class="content">
+            <h2 class="title"><a href="{{ record|link }}">{{ record|title }}</a></h2>
+
+            {{ record.description }}
+
+            <p class="meta">
+
+                {% if record.packagist_type == 'bolt-theme' %}
+                    <span class="tag is-warning">Theme</span>
+                {% else %}
+                    <span class="tag is-primary">Extension</span>
+                {% endif %}
+
+                Updated: {{ record.time_updated|localedatetime("%B %e, %Y") }}</p>
+
+        </div>
+    </div>
+    {% if record.screenshots %}
+        <div class="media-right column">
+            <figure class="image">
+                <a href="{{ record.screenshots|first }}">
+                    <img src="{{ record.repository|replace({'github.com': 'raw.githubusercontent.com'}) }}/master/{{ record.screenshots|first }}" alt="Screenshot of {{ record|title }}"
+                         style="width: 300px; border:1px solid #CCC; margin-right: 1rem;">
+                </a>
+            </figure>
+        </div>
+    {% endif %}
+</article>
