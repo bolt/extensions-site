@@ -21,6 +21,7 @@ class PackagistExtension extends BaseExtension
     private const TYPE_EXTENSION = 'bolt-extension';
     private const TYPE_THEME = 'bolt-theme';
     private const MAX_COUNT = 100;
+    private $updated = [];
 
     /** @var ContentRepository */
     private $contentRepository;
@@ -82,13 +83,12 @@ class PackagistExtension extends BaseExtension
         $om->flush();
     }
 
-    public function updatePackages()
+    public function updatePackages(): array
     {
         $om = $this->getObjectManager();
         $client = HttpClient::create();
         $count = 0;
 
-//        , 'packagist_type' => 'bolt-theme'];
         $params = ['order' => 'modifiedAt', 'status' => '!unknown'];
 
         $records = $this->getQuery()->getContentForTwig('packages', $params);
@@ -100,7 +100,6 @@ class PackagistExtension extends BaseExtension
             }
 
             $packagistName = (string) $record->getFieldValue('packagist_name');
-            dump($packagistName);
 
             $url = sprintf('%s%s.json', self::PACKAGIST_DETAIL, $packagistName);
 
@@ -113,6 +112,8 @@ class PackagistExtension extends BaseExtension
         }
 
         $om->flush();
+
+        return $this->updated;
     }
 
     private function updateRecord(Content $record, array $responseArray, string $packagistName): void
@@ -154,30 +155,31 @@ class PackagistExtension extends BaseExtension
         $record->setFieldValue('time_updated', $latest_version['time']);
         $record->setStatus(Statuses::PUBLISHED);
 
-//        if ($packagistName == 'bolt/themes') {
+//        if ($packagistName == 'bobdenotter/my-awesome-extension') {
 //            unset($package['versions']);
 //            dump($package);
 //            dump($latest_version);
+//            die();
 //        }
+
+        if ($latest_version['version'] === 'dev-master') {
+            $record->setStatus(Statuses::DRAFT);
+        }
 
         // @todo This is hackish. Make better.
         if (in_array($packagistName, [
-            "bolt/bolt-extension-starter",
-            "bolt/bolt-extension-starter-extended",
-            "rixbeck/bolt-extension-skeleton",
             "wemakecustom/bolt-parent-theme",
-            "bolt/htmlsection",
-            "eamador/bolt-dialog-pages",
             "ggioffreda/bolt-extension-rollbar",
             "gigabit/twig-wrap",
             "goodbytes/readtime",
-            "mattvick/bolt-diy-forms",
             "ornito/rest-create-users",
             "zillingen/json-content",
             "zillingen/json-files",
         ])) {
             $record->setStatus(Statuses::DRAFT);
         }
+
+        $this->updated[] = [ $packagistName, $latest_version['version'], $record->getStatus() ];
     }
 
     private function sortVersions(Collection $package): array

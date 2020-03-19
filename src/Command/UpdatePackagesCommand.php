@@ -43,7 +43,9 @@ class UpdatePackagesCommand extends Command
 
         $packagist = $this->extensionRegistry->getExtension(PackagistExtension::class);
 
-        $packagist->updatePackages();
+        $updated = $packagist->updatePackages();
+
+        $io->table(['Package', 'version', 'status'], $updated);
 
         $io->success('Done.');
     }
