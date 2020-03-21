@@ -288,16 +288,16 @@
         },
         {
             "name": "bolt/core",
-            "version": "4.0.0-rc.10",
+            "version": "4.0.0-rc.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bolt/core.git",
-                "reference": "d4706fe5530a4b15dfd0d39db97e65a2749fb597"
+                "reference": "ee0d73cd73d8e7a0a0749817a8c165a68dab00e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bolt/core/zipball/d4706fe5530a4b15dfd0d39db97e65a2749fb597",
-                "reference": "d4706fe5530a4b15dfd0d39db97e65a2749fb597",
+                "url": "https://api.github.com/repos/bolt/core/zipball/ee0d73cd73d8e7a0a0749817a8c165a68dab00e0",
+                "reference": "ee0d73cd73d8e7a0a0749817a8c165a68dab00e0",
                 "shasum": ""
             },
             "require": {
@@ -426,7 +426,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-03-18T17:38:06+00:00"
+            "time": "2020-03-20T06:25:08+00:00"
         },
         {
             "name": "bolt/newswidget",
@@ -476,16 +476,16 @@
         },
         {
             "name": "bolt/themes",
-            "version": "3.1.3",
+            "version": "3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bolt/themes.git",
-                "reference": "2cb63c9c3790c02b6ed7b7dfd090aec39d908c60"
+                "reference": "0763088e29af94fecf9ea3484407973e68e243bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bolt/themes/zipball/2cb63c9c3790c02b6ed7b7dfd090aec39d908c60",
-                "reference": "2cb63c9c3790c02b6ed7b7dfd090aec39d908c60",
+                "url": "https://api.github.com/repos/bolt/themes/zipball/0763088e29af94fecf9ea3484407973e68e243bd",
+                "reference": "0763088e29af94fecf9ea3484407973e68e243bd",
                 "shasum": ""
             },
             "require": {
@@ -515,7 +515,7 @@
                 "cms",
                 "twig"
             ],
-            "time": "2020-02-20T20:05:16+00:00"
+            "time": "2020-03-21T12:38:02+00:00"
         },
         {
             "name": "cocur/slugify",
@@ -2043,16 +2043,16 @@
         },
         {
             "name": "doctrine/reflection",
-            "version": "v1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/reflection.git",
-                "reference": "bc420ead87fdfe08c03ecc3549db603a45b06d4c"
+                "reference": "b699ecc7f2784d1e49924fd9858cf1078db6b0e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/reflection/zipball/bc420ead87fdfe08c03ecc3549db603a45b06d4c",
-                "reference": "bc420ead87fdfe08c03ecc3549db603a45b06d4c",
+                "url": "https://api.github.com/repos/doctrine/reflection/zipball/b699ecc7f2784d1e49924fd9858cf1078db6b0e2",
+                "reference": "b699ecc7f2784d1e49924fd9858cf1078db6b0e2",
                 "shasum": ""
             },
             "require": {
@@ -2073,7 +2073,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -2117,7 +2117,7 @@
                 "reflection",
                 "static"
             ],
-            "time": "2020-01-08T19:53:19+00:00"
+            "time": "2020-03-21T11:34:59+00:00"
         },
         {
             "name": "drupol/composer-packages",
@@ -9291,12 +9291,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/package-builder.git",
-                "reference": "9e4c4427f1b6185d8cdac259f5554b3b0303264c"
+                "reference": "04c3f6fe67fd88913d26948a4d153239ad53323c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/package-builder/zipball/9e4c4427f1b6185d8cdac259f5554b3b0303264c",
-                "reference": "9e4c4427f1b6185d8cdac259f5554b3b0303264c",
+                "url": "https://api.github.com/repos/symplify/package-builder/zipball/04c3f6fe67fd88913d26948a4d153239ad53323c",
+                "reference": "04c3f6fe67fd88913d26948a4d153239ad53323c",
                 "shasum": ""
             },
             "require": {
