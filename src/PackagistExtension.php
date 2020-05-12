@@ -38,7 +38,7 @@ class PackagistExtension extends BaseExtension
 
     public function fetchPackages(string $type): void
     {
-        if ($type == 'extension') {
+        if ($type === 'extension' || $type === '1') {
             $type = self::TYPE_EXTENSION;
         } else {
             $type = self::TYPE_THEME;
@@ -61,6 +61,8 @@ class PackagistExtension extends BaseExtension
             if (!$record) {
                 echo "Add new stub: $package \n";
                 $this->insertPackageStub($package, self::TYPE_EXTENSION);
+            } else {
+                echo "Already have: $package \n";
             }
         }
     }
