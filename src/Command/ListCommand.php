@@ -53,7 +53,7 @@ class ListCommand extends Command
         }
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -62,5 +62,7 @@ class ListCommand extends Command
         $packagist->fetchPackages($input->getArgument('type'));
 
         $io->success('Done.');
+
+        return 1;
     }
 }

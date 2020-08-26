@@ -37,7 +37,7 @@ class UpdatePackagesCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -48,5 +48,7 @@ class UpdatePackagesCommand extends Command
         $io->table(['Package', 'version', 'status'], $updated);
 
         $io->success('Done.');
+
+        return 1;
     }
 }
