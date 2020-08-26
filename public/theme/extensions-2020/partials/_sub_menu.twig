@@ -30,7 +30,7 @@
         </div>
     </div>
     {% else %}
-        <a href="{{ item.uri }}" title='{{ item.title|default('')|escape }}' class='navbar-item {{ item.current ? 'is-active' }} {{ item.class|default('') }}'>
+        <a href="{{ item.uri }}" title='{{ item.title|default('')|escape }}' class='navbar-item {{ item|current ? 'is-active' }} {{ item.class|default('') }}'>
             {{- item.label|default('-') -}}
         </a>
     {% endif %}

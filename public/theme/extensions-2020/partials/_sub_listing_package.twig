@@ -24,13 +24,18 @@
         {% else %}
             {% set screenshots = [record.screenshots] %}
         {% endif %}
+
+        {% if screenshots|first.value|first %}
         <div class="media-right column">
             <figure class="image">
-                <a href="{{ screenshots|first }}">
-                    <img src="{{ record.repository|replace({'github.com': 'raw.githubusercontent.com'}) }}/master/{{ screenshots|first }}" alt="Screenshot of {{ record|title }}"
+                {% set imageUrl = record.repository|replace({'github.com': 'raw.githubusercontent.com'}) ~ '/master/' ~ screenshots|first.value|first %}
+                <a href="{{ imageUrl }}">
+                    <img src="{{ imageUrl }}" alt="Screenshot of {{ record|title }}"
                          style="width: 300px; border:1px solid #CCC; margin-right: 1rem;">
                 </a>
             </figure>
         </div>
+        {% endif %}
+
     {% endif %}
 </article>
