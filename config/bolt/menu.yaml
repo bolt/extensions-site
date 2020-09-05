@@ -2,13 +2,13 @@
 # details: https://docs.bolt.cm/configuration/menus
 
 main:
-  - label: Home
+  - label: Extensions Home
     link: homepage
     class: homepage
-  - label: About
-    link: /page/about
-  - label: All packages
-    link: /packages
-  - label: The Bolt site
+  - label: Extensions
+    link: /packages?packagist_type=bolt-extension
+  - label: Themes
+    link: /packages?packagist_type=bolt-theme
+  - label: Bolt
     link: https://boltcms.io
     class: bolt-site

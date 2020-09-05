@@ -32,8 +32,7 @@ class UpdatePackagesCommand extends Command
     {
         $this
             ->setDescription('Add a short description for your command')
-            ->addArgument('onlyfeed', InputArgument::OPTIONAL, 'Fetch only this feed')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
+            ->addOption('name', null, InputOption::VALUE_OPTIONAL, 'Update only this extension / theme')
         ;
     }
 
@@ -43,7 +42,7 @@ class UpdatePackagesCommand extends Command
 
         $packagist = $this->extensionRegistry->getExtension(PackagistExtension::class);
 
-        $updated = $packagist->updatePackages();
+        $updated = $packagist->updatePackages($input->getOption('name'));
 
         $io->table(['Package', 'version', 'status'], $updated);
 

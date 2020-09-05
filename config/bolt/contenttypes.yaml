@@ -98,7 +98,7 @@ packages:
         versions:
             type: data
     records_per_page: 50
-
+    order: -time_updated
 
 pages:
     name: Pages

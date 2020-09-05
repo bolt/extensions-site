@@ -18,6 +18,7 @@ class PackagistExtension extends BaseExtension
 {
     private const PACKAGIST_LIST = 'https://packagist.org/packages/list.json';
     private const PACKAGIST_DETAIL = 'https://packagist.org/packages/';
+    private const PACKAGIST_VERSIONS = 'https://repo.packagist.org/p/';
     private const TYPE_EXTENSION = 'bolt-extension';
     private const TYPE_THEME = 'bolt-theme';
     private const MAX_COUNT = 100;
@@ -85,13 +86,17 @@ class PackagistExtension extends BaseExtension
         $om->flush();
     }
 
-    public function updatePackages(): array
+    public function updatePackages(string $name = null): array
     {
         $om = $this->getObjectManager();
         $client = HttpClient::create();
         $count = 0;
 
         $params = ['order' => 'modifiedAt', 'status' => '!unknown'];
+
+        if ($name) {
+            $params['packagist_name'] = $name;
+        }
 
         $records = $this->getQuery()->getContentForTwig('packages', $params);
 
@@ -104,11 +109,18 @@ class PackagistExtension extends BaseExtension
             $packagistName = (string) $record->getFieldValue('packagist_name');
 
             $url = sprintf('%s%s.json', self::PACKAGIST_DETAIL, $packagistName);
-
             $response = $client->request('GET', $url);
             $responseArray = current($response->toArray());
 
-            $this->updateRecord($record, $responseArray, $packagistName);
+            $url = sprintf('%s%s.json', self::PACKAGIST_VERSIONS, $packagistName);
+            $response = $client->request('GET', $url);
+            $versionsArray = current($response->toArray());
+
+            if ($name) {
+                dump($responseArray);
+            }
+
+            $this->updateRecord($record, $responseArray, $versionsArray, $packagistName);
 
             $om->persist($record);
         }
@@ -118,7 +130,7 @@ class PackagistExtension extends BaseExtension
         return $this->updated;
     }
 
-    private function updateRecord(Content $record, array $responseArray, string $packagistName): void
+    private function updateRecord(Content $record, array $responseArray, array $versionsArray, string $packagistName): void
     {
         $package = new Collection($responseArray);
 
@@ -135,11 +147,11 @@ class PackagistExtension extends BaseExtension
 
         $record->setModifiedAt(new \DateTime());
 
-        $versions = $this->sortVersions($package);
+        $versions = $this->sortVersions($versionsArray);
 
         $record->setFieldValue('versions', $versions);
 
-        $latest_version = (new Collection($package->get('versions')))->get(current($versions));
+        $latest_version = (new Collection(current($versionsArray)))->get(current($versions));
 
         if (isset($latest_version['require']['bolt/core'])) {
             $record->setFieldValue('required_version', $latest_version['require']['bolt/core']);
@@ -156,13 +168,6 @@ class PackagistExtension extends BaseExtension
 
         $record->setFieldValue('time_updated', $latest_version['time']);
         $record->setStatus(Statuses::PUBLISHED);
-
-//        if ($packagistName == 'bobdenotter/my-awesome-extension') {
-//            unset($package['versions']);
-//            dump($package);
-//            dump($latest_version);
-//            die();
-//        }
 
         if ($latest_version['version'] === 'dev-master') {
             $record->setStatus(Statuses::DRAFT);
@@ -184,9 +189,9 @@ class PackagistExtension extends BaseExtension
         $this->updated[] = [ $packagistName, $latest_version['version'], $record->getStatus() ];
     }
 
-    private function sortVersions(Collection $package): array
+    private function sortVersions(array $versionsArray): array
     {
-        $rawVersions = (new Collection($package->get('versions')))->keys()->all();
+        $rawVersions = (new Collection(current($versionsArray)))->keys()->all();
         $versions = [];
 
         foreach ($rawVersions as $version) {
