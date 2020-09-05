@@ -116,10 +116,6 @@ class PackagistExtension extends BaseExtension
             $response = $client->request('GET', $url);
             $versionsArray = current($response->toArray());
 
-            if ($name) {
-                dump($responseArray);
-            }
-
             $this->updateRecord($record, $responseArray, $versionsArray, $packagistName);
 
             $om->persist($record);
