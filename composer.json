@@ -1,12 +1,13 @@
 {
+    "name": "bolt/project",
     "type": "project",
-    "license": "proprietary",
+    "description": "Bolt 4 standard project skeleton",
+    "license": "MIT",
     "require": {
-        "bobdenotter/weatherwidget": "^1.0",
-        "bolt/assets": "^4.0",
-        "bolt/core": "dev-master",
-        "bolt/newswidget": "^1.1",
-        "bolt/themes": "^3.1",
+        "bobdenotter/configuration-notices": "^1.0",
+        "bolt/assets": "^4.1",
+        "bolt/core": "^4.1",
+        "bolt/themes": "^3.3",
         "symfony/flex": "^1.6"
     },
     "autoload": {
@@ -14,7 +15,7 @@
             "App\\": "src/"
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "scripts": {
         "auto-scripts": {
@@ -35,9 +36,6 @@
             "@auto-scripts",
             "php bin/console extensions:configure",
             "php bin/console bolt:info"
-        ],
-        "periodical-tasks": [
-            "security-checker security:check"
         ]
     },
     "extra": {
