@@ -93,7 +93,7 @@ class PackagistExtension extends BaseExtension
         $client = HttpClient::create();
         $count = 0;
 
-        $params = ['order' => 'modifiedAt', 'status' => 'published'];
+        $params = ['order' => 'modifiedAt', 'status' => '!unknown'];
 
         if ($name) {
             $params['packagist_name'] = $name;
