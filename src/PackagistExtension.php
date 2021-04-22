@@ -11,6 +11,7 @@ use Bolt\Enum\Statuses;
 use Bolt\Extension\BaseExtension;
 use Bolt\Repository\ContentRepository;
 use Bolt\Storage\Query;
+use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
 use Tightenco\Collect\Support\Collection;
 
@@ -109,14 +110,22 @@ class PackagistExtension extends BaseExtension
             $packagistName = (string) $record->getFieldValue('packagist_name');
 
             $url = sprintf('%s%s.json', self::PACKAGIST_DETAIL, $packagistName);
-            $response = $client->request('GET', $url);
-            $responseArray = current($response->toArray());
 
-            $url = sprintf('%s%s.json', self::PACKAGIST_VERSIONS, $packagistName);
-            $response = $client->request('GET', $url);
-            $versionsArray = current($response->toArray());
+            try {
+                $response = $client->request('GET', $url);
+                $responseArray = current($response->toArray());
 
-            $this->updateRecord($record, $responseArray, $versionsArray, $packagistName);
+                $url = sprintf('%s%s.json', self::PACKAGIST_VERSIONS, $packagistName);
+                $response = $client->request('GET', $url);
+                $versionsArray = current($response->toArray());
+
+                $this->updateRecord($record, $responseArray, $versionsArray, $packagistName);
+
+            } catch (ClientException $exception) {
+                dump('Could not get ' . $url);
+                $record->setStatus('held');
+            }
+
 
             $om->persist($record);
         }
