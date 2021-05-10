@@ -1,0 +1,40 @@
+{% extends 'partials/_master.twig' %}
+
+{% block main %}
+    <main id="content" tabindex="-1">
+        <div class="subheader">
+            {% setcontent homepage = "homepage" limit 1 returnsingle %}
+            {% if homepage %}
+            <h1>{{ homepage.title }}</h1>
+
+            <div class="teaser">{{ homepage.teaser }}</div>
+        </div>
+        {% else %}
+            {# Remove this include if you don't need it anymore. #}
+            {{ include('partials/_no_content.twig') }}
+        {% endif %}
+
+
+
+        <div class="content-wrapper-about">
+            <p>{{ include('partials/_aside.twig') }}</p>
+        </div>
+        <div class="content-wrapper">
+            <h2 class="title">Most recently updated Packages</h2>
+            {% setcontent records = 'packages' order '-time_updated' %}
+            {% for record in records %}
+                <div class="news-wrapper">
+                    {% include('partials/_sub_listing_package.twig') %}
+                </div>
+            {% else %}
+                <p>{{ __("general.phrase.no-content-found") }}</p>
+            {% endfor %}
+            <div class="buttons has-addons is-right">
+                <a class="button is-primary" href="{{ path('listing', {'contentTypeSlug': 'entries'}) }}">Read more
+                    <span class="is-hidden"> Entries</span></a>
+            </div>
+        </div>
+
+        {% include "partials/_sub_recent_packages.twig" %}
+    </main>
+{% endblock main %}
