@@ -2056,7 +2056,7 @@ header > nav > ul > li > a {
 div.media-content.column.is-7 {
     flex-direction: unset;
     text-align: left;
-
+    display: block;
 }
 
 div.media-content.column.is-7, div.media-right.column{
@@ -2064,5 +2064,6 @@ div.media-content.column.is-7, div.media-right.column{
 }
 
 article.media.columns{
-    height: 300px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
