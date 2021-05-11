@@ -20,9 +20,7 @@
             {% if block|image %}
                 <img src="{{ block|thumbnail(480, 320) }}" alt="{{ block|image.alt }}">
             {% endif %}
-
-            <h2 class="title">{{ block|title }}</h2>
-            <p>{{ block.content|default(block|excerpt) }}</p>
+            <p>{{ block.body }}</p>
 
             {% include 'partials/_record_meta.twig' with {'record': block } %}
 

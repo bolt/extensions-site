@@ -13,14 +13,11 @@
             {# Remove this include if you don't need it anymore. #}
             {{ include('partials/_no_content.twig') }}
         {% endif %}
-
-
-
-        <div class="content-wrapper-about">
-            <p>{{ include('partials/_aside.twig') }}</p>
-        </div>
         <div class="content-wrapper">
-            <h2 class="title">Most recently updated Packages</h2>
+            <div class="important-message">
+                <p>{{ include('partials/_aside.twig') }}</p>
+                <h2>Most recently updated Packages</h2>
+            </div>
             {% setcontent records = 'packages' order '-time_updated' %}
             {% for record in records %}
                 <div class="news-wrapper">
@@ -29,10 +26,6 @@
             {% else %}
                 <p>{{ __("general.phrase.no-content-found") }}</p>
             {% endfor %}
-            <div class="buttons has-addons is-right">
-                <a class="button is-primary" href="{{ path('listing', {'contentTypeSlug': 'entries'}) }}">Read more
-                    <span class="is-hidden"> Entries</span></a>
-            </div>
         </div>
 
         {% include "partials/_sub_recent_packages.twig" %}

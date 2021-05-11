@@ -15,7 +15,8 @@
                 <ul class="nav__wrapper">
                     {% for item in menu_array() %}
                         <li class="nav__item {{ item.class }} {% if item.submenu|default %}has-submenu{% endif %}">
-                            <a {% if item == menu_array()|last %} transition-style="in:circle:top-right" {% endif %} href="{{ item.link }}" {% if item.submenu|default %} aria-haspopup="true" {% endif %}
+                            <a {% if item == menu_array()|last %} transition-style="in:circle:top-right" {% endif %}
+                                    href="{{ item.link }}" {% if item.submenu|default %} aria-haspopup="true" {% endif %}
                                     {% if item.target is defined %}target="{{ item.target|escape }}"{% endif %}>{{ item.label }}</a>
                             {% if item.submenu|default %}
                                 <div>
@@ -30,6 +31,14 @@
                             {% endif %}
                         </li>
                     {% endfor %}
+                    <div class="search-container">
+                        <form class="search" method="get" action="{{ path('search') }}" enctype="text/plain">
+                            <label>
+                                <input class="input-search" type="text" placeholder="Search.." name="search">
+                            </label>
+                            <button type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
                 </ul>
             </nav>
         </div>

@@ -1933,6 +1933,22 @@ header > nav > ul > li > a {
     transition: all linear 0.1s;
 }
 
+.search {
+    display: flex;
+    padding: 1rem .5rem;
+}
+
+.input-search{
+    font-weight: 400;
+    color: var(--color-contrast-high);
+    text-decoration-color: hsla(218, 72%, 32%, 0);
+    text-underline-offset: 3px;
+    width: 9rem;
+}
+
+.search-container{
+     font-size: var(--text-sm);
+}
 
 /** Bolt form */
 
@@ -2029,7 +2045,7 @@ header > nav > ul > li > a {
     /* Draw a very noticeable focus style for
        keyboard-focus on browsers that do support
        :focus-visible */
-    outline: 4px dashed darkorange;
+    outline: var(--color-contrast-high);
 }
 
 #content:focus {
