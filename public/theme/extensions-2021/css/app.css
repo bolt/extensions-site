@@ -2051,3 +2051,18 @@ header > nav > ul > li > a {
 #content:focus {
     outline: none;
 }
+
+/* Extensions index */
+div.media-content.column.is-7 {
+    flex-direction: unset;
+    text-align: left;
+
+}
+
+div.media-content.column.is-7, div.media-right.column{
+    padding: var(--space-xs);
+}
+
+article.media.columns{
+    height: 300px;
+}
