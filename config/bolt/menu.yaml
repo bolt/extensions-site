@@ -2,9 +2,6 @@
 # details: https://docs.bolt.cm/configuration/menus
 
 main:
-  - label: Extensions Home
-    link: homepage
-    class: homepage
   - label: Extensions
     link: /packages?packagist_type=bolt-extension
   - label: Themes
