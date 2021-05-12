@@ -6,11 +6,11 @@
     {% endif %}
 
     {% if screenshots|first.value|first %}
-            <figure class="image">
+            <figure class="image-screenshot">
                 {% set imageUrl = record.repository|replace({'github.com': 'raw.githubusercontent.com'}) ~ '/master/' ~ screenshots|first.value|first %}
                 <a href="{{ imageUrl }}">
                     <img src="{{ imageUrl }}" alt="Screenshot of {{ record|title }}"
-                         style="height: 250px; border:1px solid #CCC; margin-right: 1rem;">
+                         style="max-width: 350px; border:1px solid #CCC; margin-right: 1rem;">
                 </a>
             </figure>
 

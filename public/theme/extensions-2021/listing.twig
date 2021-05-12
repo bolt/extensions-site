@@ -1,43 +1,41 @@
 {% extends 'partials/_master.twig' %}
 
 {% block main %}
-<section class="section section-listing">
-    <div class="container">
-    {# This template is used for 'listings': Generic pages that list a number of
+    <main id="content" tabindex="-1">
+
+        {# This template is used for 'listings': Generic pages that list a number of
         records from a certain contenttype. These records are available as an array
         called 'records'. In the for-loop below, we iterate over the records that
         are on this page. It can be used for overview pages like 'all entries', or
         'all records tagged with kittens'. #}
 
-    {# If used for listing a taxonomy, we add a heading #}
-    {% if taxonomy is defined %}
-        <div class="content">
-            <h1 class="title is-size-2 is-size-4-mobile">
-                {{ __('general.phrase.overview-for', {'%slug%': taxonomy.options[slug]|default(slug) }) }}
-            </h1>
+        {# If used for listing a taxonomy, we add a heading #}
+        <div class="subheader">
+            {% if taxonomy is defined %}
+                <h1>
+                    {{ __('general.phrase.overview-for', {'%slug%': taxonomy.options[slug]|default(slug) }) }}
+                </h1>
+            {% else %}
+                <h1 class="title is-size-2 is-size-4-mobile">{{ contenttype.name }}</h1>
+
+            {% endif %}
         </div>
-    {% else %}
-        <h1 class="title is-size-2 is-size-4-mobile">{{ contenttype.name }}</h1>
-    {% endif %}
+        <div class="content-wrapper">
+            {% for record in records %}
+                <div class="news-wrapper">
+                {% include('partials/_sub_listing_package.twig') %}
 
-    {% for record in records %}
+            {% else %}
 
-        {% include('partials/_sub_listing_package.twig') %}
-
-    {% else %}
-        <article role="article">
-            <div class="content">
                 <h2 class="title">{{ __('general.phrase.no-content-found') }}</h2>
 
                 <p>
                     {{ __("Unfortunately, no content could be found. Try another page, or go to the <a href=\"%paths_root%\">homepage</a>.", {'%paths_root%': path('homepage')} ) }}
                 </p>
-            </div>
-        </article>
-    {% endfor %}
+                </div>
+            {% endfor %}
+            {# If there are more records than will fit on one page, the pager is shown. #}
+            {{ pager(records, template = 'helpers/_pager_bulma.html.twig') }}
 
-    {# If there are more records than will fit on one page, the pager is shown. #}
-    {{ pager(records, template = 'helpers/_pager_bulma.html.twig') }}
-    </div>
-</section>
+    </main>
 {% endblock main %}
