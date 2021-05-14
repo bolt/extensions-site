@@ -18,60 +18,75 @@
 
                 {% endif %}
 
-                <div class="package description">
-                    <h2>{{ record.description }}</h2>
-                </div>
+                {% if record.description %}
+                    <div class="package description">
+                        <h2>{{ record.description }}</h2>
+                    </div>
+                {% endif %}
 
-                <div class="package fieldvalues">
-                    {{ dump(record.fieldvalues) }}
-                </div>
-                <div class="package instructions">
-                    <p class="current-version">Installation instructions:</p>
-                    {% if record.packagist_type == 'bolt-theme' %}
-                        composer require {{ record.packagist_name }}
-                        <br>
-                        bin/console bolt:copy-theme {{ record.packagist_name }}
-                    {% else %}
-                        composer require {{ record.packagist_name }}
-                    {% endif %}
-                </div>
-                <div class="package screenshot">
-                    {% include 'partials/_screenshots.twig' with {'record': record} %}
-                </div>
+                {% if record.fieldvalues %}
+                    <div class="package fieldvalues">
+                        {{ dump(record.fieldvalues) }}
+                    </div>
+                {% endif %}
 
-                <div class="package details">
-                    <ul>
-                        <li>Type:
-                            {% if record.packagist_type == 'bolt-theme' %}Theme{% else %}Extension{% endif %}
-                        </li>
-                        <li>Repository: <a href="{{ record.repository }}">{{ record.repository }}</a></li>
-                        <li>Popularity: {{ record.github_stars }} stars on Github.</li>
-                        <li>Created: {{ record.time|localedatetime("%B %e, %Y") }}</li>
-                        <li>Last updated: {{ record.time_updated|localedatetime("%B %e, %Y") }}</li>
-                        <li>Downloads: {{ record.downloads_total }} total,
-                            {{ record.downloads_monthly }} monthly,
-                            {{ record.downloads_daily }} daily,
-                        </li>
-
-                        <li>Maintainers:
-                            {% if attribute(record.maintainers.value, 'name') is defined %}
-                                {% set maintainers = [record.maintainers.value] %}
+                {% if record.packagist_name %}
+                    <div class="package instructions">
+                        <p>Installation instructions:</p>
+                        <p class="package current-version">{% if record.packagist_type == 'bolt-theme' %}
+                                composer require {{ record.packagist_name }}
+                                <br>
+                                bin/console bolt:copy-theme {{ record.packagist_name }}
                             {% else %}
-                                {% set maintainers = record.maintainers.value %}
-                            {% endif %}
-                            {% for maintainer in maintainers %}
-                                {{ maintainer.name }}{% if not loop.last %}, {% endif %}
-                            {% endfor %}
+                                composer require {{ record.packagist_name }}
+                            {% endif %}</p>
+                    </div>
+                {% endif %}
 
-                        </li>
+                {% if record.screenshot %}
+                    <div class="package screenshot">
+                        {% include 'partials/_screenshots.twig' with {'record': record} %}
+                    </div>
+                {% endif %}
 
-                        <li>Versions:
-                            {% for version in record.versions.value %}
-                                <span class="tag is-light">{{ version }}</span>
-                            {% endfor %}
-                        </li>
-                    </ul>
-                </div>
+                {% if record.repository %}
+                    <div class="package details">
+                        <ul>
+                            <li>Type:
+                                {% if record.packagist_type == 'bolt-theme' %}Theme{% else %}Extension{% endif %}
+                            </li>
+                            <li>Repository: <a href="{{ record.repository }}"
+                                               class="package-githubLink">{{ record.repository }}</a></li>
+                            <li>Popularity: {{ record.github_stars }} stars on Github.</li>
+                            <li>Created: {{ record.time|localedatetime("%B %e, %Y") }}</li>
+                            <li>Last updated: {{ record.time_updated|localedatetime("%B %e, %Y") }}</li>
+                            <li>Downloads: {{ record.downloads_total }} total,
+                                {{ record.downloads_monthly }} monthly,
+                                {{ record.downloads_daily }} daily,
+                            </li>
+
+                            <li>Maintainers:
+                                {% if attribute(record.maintainers.value, 'name') is defined %}
+                                    {% set maintainers = [record.maintainers.value] %}
+                                {% else %}
+                                    {% set maintainers = record.maintainers.value %}
+                                {% endif %}
+                                {% for maintainer in maintainers %}
+                                    {{ maintainer.name }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+
+                            </li>
+
+                            <li>Versions:
+                                {% for version in record.versions.value|slice(0,3) %}
+                                    <span class="tag is-light">{{ version }}</span>
+                                {% endfor %}
+                                <span>and {{ record.versions.value|length-3 }} more</span>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+
             </div>
         </div>
     </main>

@@ -22,20 +22,21 @@
         </div>
         <div class="content-wrapper">
             {% for record in records %}
-                <div class="news-wrapper">
+            <div class="news-wrapper">
                 {% include('partials/_sub_listing_package.twig') %}
 
-            {% else %}
+                {% else %}
 
                 <h2 class="title">{{ __('general.phrase.no-content-found') }}</h2>
 
                 <p>
                     {{ __("Unfortunately, no content could be found. Try another page, or go to the <a href=\"%paths_root%\">homepage</a>.", {'%paths_root%': path('homepage')} ) }}
                 </p>
-                </div>
-            {% endfor %}
-            {# If there are more records than will fit on one page, the pager is shown. #}
-            {{ pager(records, template = 'helpers/_pager_bulma.html.twig') }}
+            </div>
+        </div>
+        {% endfor %}
+        {# If there are more records than will fit on one page, the pager is shown. #}
+        {{ pager(records, template = 'helpers/_pager_bulma.html.twig') }}
 
     </main>
 {% endblock main %}
