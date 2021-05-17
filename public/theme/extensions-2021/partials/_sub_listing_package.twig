@@ -1,0 +1,25 @@
+
+<article role="article" class="media columns">
+    <div class="media-content column is-7">
+
+            <h3><a href="{{ record|link }}">{{ record|title }}</a></h3>
+
+            <p>{{ record.description }}</p>
+
+            <p class="meta">
+
+                {% if record.packagist_type == 'bolt-theme' %}
+                    <span class="tag is-warning">Theme</span>
+                {% else %}
+                    <span class="tag is-primary">Extension</span>
+                {% endif %}
+
+                Updated: {{ record.time_updated|localedatetime("%B %e, %Y") }}</p>
+
+
+    </div>
+    <div class="media-right column">
+        {% include 'partials/_screenshots.twig' with {'record': record} %}
+    </div>
+
+</article>

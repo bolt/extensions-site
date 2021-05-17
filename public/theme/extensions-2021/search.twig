@@ -1,0 +1,70 @@
+{% extends 'partials/_master.twig' %}
+
+{% block main %}
+    <main id="content" tabindex="-1">
+
+        {# This template is used for search results. If 'search' is defined,
+        we display an appropriate title. The 'records' array contains all of the
+        records matching the current query. If there are no results, the
+        code in the 'else' part of the for-loop is used. #}
+
+        <div class="subheader">
+            <h1>
+                {% if search is not empty %}
+                    {{ __('general.phrase.search-results-for-variable', { '%search%': search }) }}
+                {% else %}
+                    {{ __('general.phrase.search') }}
+                {% endif %}
+            </h1>
+        </div>
+
+        {# Perhaps we post a small teaser, stored in the 'block' named 'Search teaser' #}
+        {% setcontent block = "block/search-teaser" %}
+
+        {# check if we have 'content'. If so, we know we have have a teaser to display. #}
+        {% if block.content is defined %}
+            <div class="content">
+                {{ block.content }}
+            </div>
+        {% endif %}
+        <div class="content-wrapper">
+            <div class="detail-page">
+                <div class="search-container">
+                    <form class="search result" method="get" action="{{ path('search') }}" enctype="text/plain">
+                        <label class="label search is-hidden" for="search-form">{{ __('general.phrase.search') }}
+                            <input class="input-search result" type="text"
+                                   value="{% if search is defined %}{{ search|escape }}{% endif %}"
+                                   placeholder="{{ __('general.phrase.search-ellipsis') }}" name="search"
+                                   id="search-form">
+                            <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
+                        </label>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="content-wrapper">
+            {% for record in records %}
+                <div class="news-wrapper">
+                    {% include('partials/_sub_listing_package.twig') %}
+                </div>
+            {% else %}
+
+                <div class="content">
+                    <p>
+                        {% if searchTerm is not empty %}
+                            {{ __('general.phrase.no-search-results-for', { '%search%': searchTerm|escape }) }}
+                        {% else %}
+                            {{ __('general.phrase.no-search-term-provided') }}
+                        {% endif %}
+                    </p>
+                </div>
+
+            {% endfor %}
+
+            {# If there are more records than will fit on one page, the pager is shown. #}
+            {{ pager(records, template = 'helpers/_pager_bulma.html.twig') }}
+
+        </div>
+
+    </main>
+{% endblock main %}

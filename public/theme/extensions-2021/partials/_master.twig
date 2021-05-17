@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang={{ htmllang() }}>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css', 'theme') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="{{ asset('img/favicon.ico', 'theme') }}">
+
+    <!-- Matomo -->
+    <script type="text/javascript">
+        var _paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "//stats.bolt.cm/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '6']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript';
+            g.async = true;
+            g.defer = true;
+            g.src = u + 'matomo.js';
+            s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <noscript><p><img src="//stats.bolt.cm/matomo.php?idsite=6&amp;rec=1" alt="Bolt" style="border:0;"></p></noscript>
+    <!-- End Matomo Code -->
+
+    {# make sure we always display a proper title: The record's title if there is one, appended with the
+           sitename. If there is no title, we append the sitename with the payoff, if there is one. #}
+    <title>
+        {%- if record|default -%}
+            {{- record|title ~ ' | ' -}}
+        {%- endif -%}
+        {{- config.get('general/sitename') -}}
+        {%- if record|default == null and config.has('general/payoff') -%}
+            {{- ' | ' ~ config.get('general/payoff') -}}
+        {%- endif -%}
+    </title>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<a href="#content" class="skip-link">
+    Skip to main content
+</a>
+{% set baseurl = app.request.getSchemeAndHttpHost %}
+{% set link = canonical()|replace({ (baseurl) : ''}) %}
+
+{% block body %}
+    {{ include('partials/_header.twig') }}
+
+    {{ widgets('main_top') }}
+
+    {% block main %}
+    {% endblock main %}
+
+    {{ widgets('main_bottom') }}
+{% endblock body %}
+
+{{ include('partials/_footer.twig') }}
+
+{% block javascripts %}
+{% endblock javascripts %}
+</body>
+</html>
