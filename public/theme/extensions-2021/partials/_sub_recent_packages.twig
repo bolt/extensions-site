@@ -4,21 +4,21 @@
     contenttype with /latest/3, so it becomes something like "pages/latest/3".
 #}
 
-            {% for type in ['bolt-extension', 'bolt-theme'] %}
+{% for type in ['bolt-extension', 'bolt-theme'] %}
 
-                {% setcontent records = "packages" where {'packagist_type': type} order '-time_updated' %}
+    {% setcontent records = "packages" where {'packagist_type': type} order '-time_updated' %}
 
-                <div class="url-list">
-                    {% if type == 'bolt-extension' %}
-                        <h3>Recently updated extensions</h3>
-                    {% else %}
-                        <h3>Recently updated themes</h3>
-                    {% endif %}
+    <div class="url-list">
+        {% if type == 'bolt-extension' %}
+            <h3>Recently updated extensions</h3>
+        {% else %}
+            <h3>Recently updated themes</h3>
+        {% endif %}
 
-                    {% for record in records %}
-                       <a href="{{ record|link }}">{{ record|title }}</a>
-                    {% else %}
-                        {{ __('contenttypes.generic.no-recent', {'%contenttype%': ct.slug}) }}
-                    {% endfor %}
-                </div>
-            {% endfor %}
+        {% for record in records %}
+            <a href="{{ record|link }}">{{ record|title }}</a>
+        {% else %}
+            {{ __('contenttypes.generic.no-recent', {'%contenttype%': ct.slug}) }}
+        {% endfor %}
+    </div>
+{% endfor %}
