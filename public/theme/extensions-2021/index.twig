@@ -24,10 +24,10 @@
                 <p>{{ __("general.phrase.no-content-found") }}</p>
             {% endfor %}
         </div>
-
-        {% include "partials/_sub_recent_packages.twig" %}
         <div class="news-wrapper">
             {{ pager(records, template = 'helpers/_pager_bulma.html.twig') }}
         </div>
+        {% include "partials/_sub_recent_packages.twig" %}
+
     </main>
 {% endblock main %}
