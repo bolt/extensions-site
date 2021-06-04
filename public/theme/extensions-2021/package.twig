@@ -8,21 +8,15 @@
         <div class="content-wrapper">
             <div class="detail-page">
 
-                {% if record|image %}
-                    <div class="package image">
-                        <img src="{{ record|image|thumbnail(1080, 540, fit='crop') }}"
-                             alt="{{ record|image.alt|default() }}"/>
-
-                        {{ record|image.alt|default() }}
-                    </div>
-
-                {% endif %}
-
                 {% if record.description %}
                     <div class="package description">
                         <h2>{{ record.description }}</h2>
                     </div>
                 {% endif %}
+
+                <div class="package screenshot">
+                {% include 'partials/_screenshots.twig' with {'record': record} %}
+                </div>
 
                 {% if record.fieldvalues %}
                     <div class="package fieldvalues">
