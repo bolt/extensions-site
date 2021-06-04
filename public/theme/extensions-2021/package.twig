@@ -18,12 +18,6 @@
                 {% include 'partials/_screenshots.twig' with {'record': record} %}
                 </div>
 
-                {% if record.fieldvalues %}
-                    <div class="package fieldvalues">
-                        {{ dump(record.fieldvalues) }}
-                    </div>
-                {% endif %}
-
                 {% if record.packagist_name %}
                     <div class="package instructions">
                         <p>Installation instructions:</p>
