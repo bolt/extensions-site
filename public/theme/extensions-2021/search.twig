@@ -16,35 +16,32 @@
                     {{ __('general.phrase.search') }}
                 {% endif %}
             </h1>
-        </div>
 
-        {# Perhaps we post a small teaser, stored in the 'block' named 'Search teaser' #}
-        {% setcontent block = "block/search-teaser" %}
 
-        {# check if we have 'content'. If so, we know we have have a teaser to display. #}
-        {% if block.content is defined %}
-            <div class="content">
-                {{ block.content }}
-            </div>
-        {% endif %}
-        <div class="content-wrapper">
-            <div class="detail-page">
-                <div class="search-container">
-                    <form class="search result" method="get" action="{{ path('search') }}" enctype="text/plain">
-                        <label class="label search is-hidden" for="search-form">{{ __('general.phrase.search') }}
-                            <input class="input-search result" type="text"
-                                   value="{% if search is defined %}{{ search|escape }}{% endif %}"
-                                   placeholder="{{ __('general.phrase.search-ellipsis') }}" name="search"
-                                   id="search-form">
-                            <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
-                        </label>
-                    </form>
+            {# Perhaps we post a small teaser, stored in the 'block' named 'Search teaser' #}
+            {% setcontent block = "block/search-teaser" %}
+
+            {# check if we have 'content'. If so, we know we have have a teaser to display. #}
+            {% if block.content is defined %}
+                <div class="content">
+                    {{ block.content }}
                 </div>
+            {% endif %}
+            <div class="search-container">
+                <form class="search" method="get" action="{{ path('search') }}" enctype="text/plain">
+
+                    <label for="search-form"></label><input class="input-search" type="text"
+                                                            value="{% if search is defined %}{{ search|escape }}{% endif %}"
+                                                            placeholder="{{ __('general.phrase.search-ellipsis') }}"
+                                                            name="search"
+                                                            id="search-form">
+                    <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
+                </form>
             </div>
         </div>
         <div class="content-wrapper">
             {% for record in records %}
-                <div class="news-wrapper">
+                <div class="item">
                     {% include('partials/_sub_listing_package.twig') %}
                 </div>
             {% else %}
@@ -62,9 +59,9 @@
             {% endfor %}
 
             {# If there are more records than will fit on one page, the pager is shown. #}
-            {{ pager(records, template = 'helpers/_pager_bulma.html.twig') }}
-
         </div>
+
+        {{ pager(records) }}
 
     </main>
 {% endblock main %}
